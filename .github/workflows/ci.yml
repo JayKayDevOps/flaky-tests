@@ -25,7 +25,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest test_flaky.py
+        run: pytest flaky_test.py
         continue-on-error: true
 
       - name: Retry flaky tests if failed
