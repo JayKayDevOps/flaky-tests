@@ -1,0 +1,34 @@
+name: CI Pipeline with Flaky Test Simulation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install pytest pytest-rerunfailures
+
+      - name: Run Tests with Retry Mechanism
+        run: |
+          source venv/bin/activate
+          pytest --reruns 3 --reruns-delay 2 tests/
+
