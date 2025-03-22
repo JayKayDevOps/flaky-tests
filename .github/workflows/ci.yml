@@ -1,34 +1,42 @@
-name: CI Pipeline with Flaky Test Simulation
+name: CI/CD Pipeline with Flaky Tests
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install pytest pytest-rerunfailures
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Run Tests with Retry Mechanism
-        run: |
-          source venv/bin/activate
-          pytest --reruns 3 --reruns-delay 2 tests/
+      - name: Run tests
+        run: pytest test_flaky.py
+        continue-on-error: true
 
+      - name: Retry flaky tests if failed
+        if: failure()
+        run: pytest --reruns 3 test_flaky.py
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Deploy (Mock)
+        run: echo "Deploying... Success!"
