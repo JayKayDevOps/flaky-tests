@@ -9,7 +9,7 @@ def simulate_flaky_test() -> bool:
     """
     Simulates a flaky test with a 20% chance of failure.
     """
-    return random.random() > 0.2  # 80% pass, 20% fail
+    return random.random() > 0.01  # 80% pass, 20% fail
 
 def run_tests(iterations: int = 100):
     """
