@@ -11,7 +11,7 @@ def simulate_flaky_test() -> bool:
     """
     return random.random() > 0.01  # 80% pass, 20% fail
 
-def run_tests(iterations: int = 100):
+def run_tests(iterations: int = 10):
     """
     Runs the flaky test multiple times and stores results.
     """
